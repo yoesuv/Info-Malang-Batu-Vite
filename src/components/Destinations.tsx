@@ -10,85 +10,11 @@ import {
   Text,
   VStack,
 } from '@chakra-ui/react'
-import type { IconType } from 'react-icons'
-import {
-  LuCar,
-  LuFerrisWheel,
-  LuFlower2,
-  LuMountain,
-  LuPalette,
-  LuWaves,
-} from 'react-icons/lu'
-
-interface Destination {
-  name: string
-  location: string
-  description: string
-  icon: IconType
-  colorPalette: string
-  tag: string
-}
-
-const destinations: Destination[] = [
-  {
-    name: 'Mount Bromo',
-    location: 'Bromo Tengger Semeru NP',
-    description:
-      'Catch the legendary sunrise over an active volcanic crater in the Sea of Sand.',
-    icon: LuMountain,
-    colorPalette: 'orange',
-    tag: 'Nature',
-  },
-  {
-    name: 'Jatim Park 3',
-    location: 'Batu',
-    description:
-      'A family-favorite theme park featuring Dino Park, infinity pools, and fun rides.',
-    icon: LuFerrisWheel,
-    colorPalette: 'pink',
-    tag: 'Theme Park',
-  },
-  {
-    name: 'Coban Rondo',
-    location: 'Pujon, Malang',
-    description:
-      'An 84-meter waterfall surrounded by lush pine forests and a hedge maze.',
-    icon: LuWaves,
-    colorPalette: 'cyan',
-    tag: 'Waterfall',
-  },
-  {
-    name: 'Museum Angkut',
-    location: 'Batu',
-    description:
-      'Southeast Asia\u2019s first transportation museum with 300+ vintage vehicle collections.',
-    icon: LuCar,
-    colorPalette: 'purple',
-    tag: 'Museum',
-  },
-  {
-    name: 'Selecta',
-    location: 'Batu',
-    description:
-      'A historic flower garden and recreation park dating back to the Dutch colonial era.',
-    icon: LuFlower2,
-    colorPalette: 'green',
-    tag: 'Garden',
-  },
-  {
-    name: 'Kampung Warna-Warni',
-    location: 'Jodipan, Malang',
-    description:
-      'A riverside village transformed into a colorful mural-filled photo hotspot.',
-    icon: LuPalette,
-    colorPalette: 'yellow',
-    tag: 'Culture',
-  },
-]
+import { places } from '@/data/places'
 
 export function Destinations() {
   return (
-    <Box as="section" id="destinations" py={{ base: '12', md: '20' }}>
+    <Box as="section" py={{ base: '12', md: '20' }}>
       <Container maxW="6xl">
         <VStack gap="3" textAlign="center" mb="10">
           <Heading as="h2" size={{ base: '2xl', md: '3xl' }} letterSpacing="tight">
@@ -100,7 +26,7 @@ export function Destinations() {
         </VStack>
 
         <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} gap="6">
-          {destinations.map((destination) => (
+          {places.map((destination) => (
             <Card.Root
               key={destination.name}
               variant="outline"

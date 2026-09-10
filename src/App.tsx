@@ -1,22 +1,28 @@
-import { Box } from '@chakra-ui/react'
-import { Destinations } from '@/components/Destinations'
-import { Footer } from '@/components/Footer'
-import { Hero } from '@/components/Hero'
-import { Highlights } from '@/components/Highlights'
-import { Navbar } from '@/components/Navbar'
+import { createBrowserRouter, RouterProvider } from 'react-router'
+
+import { Layout } from '@/components/Layout'
+import AboutPage from '@/pages/AboutPage'
+import GalleryPage from '@/pages/GalleryPage'
+import HomePage from '@/pages/HomePage'
+import MapsPage from '@/pages/MapsPage'
+import PlacesPage from '@/pages/PlacesPage'
+
+const router = createBrowserRouter([
+  {
+    path: '/',
+    Component: Layout,
+    children: [
+      { index: true, Component: HomePage },
+      { path: 'places', Component: PlacesPage },
+      { path: 'gallery', Component: GalleryPage },
+      { path: 'maps', Component: MapsPage },
+      { path: 'about', Component: AboutPage },
+    ],
+  },
+])
 
 function App() {
-  return (
-    <Box minH="100dvh">
-      <Navbar />
-      <main>
-        <Hero />
-        <Destinations />
-        <Highlights />
-      </main>
-      <Footer />
-    </Box>
-  )
+  return <RouterProvider router={router} />
 }
 
 export default App

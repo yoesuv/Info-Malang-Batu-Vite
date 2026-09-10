@@ -9,6 +9,7 @@ import {
   VStack,
 } from '@chakra-ui/react'
 import { LuArrowRight, LuCompass } from 'react-icons/lu'
+import { Link } from 'react-router'
 
 export function Hero() {
   return (
@@ -52,14 +53,14 @@ export function Hero() {
 
           <HStack gap="4" pt="2" flexWrap="wrap" justify="center">
             <Button asChild colorPalette="teal" size="lg">
-              <a href="#destinations">
+              <Link to="/places">
                 Explore destinations <LuArrowRight />
-              </a>
+              </Link>
             </Button>
             <Button asChild variant="outline" size="lg">
-              <a href="#highlights">
-                <LuCompass /> View highlights
-              </a>
+              <Link to="/gallery">
+                <LuCompass /> View gallery
+              </Link>
             </Button>
           </HStack>
         </VStack>

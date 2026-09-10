@@ -3,7 +3,14 @@ import { LuMapPin } from 'react-icons/lu'
 
 export function Footer() {
   return (
-    <Box as="footer" py="8">
+    <Box
+      as="footer"
+      py="8"
+      mb={{ base: '14', md: '0' }}
+      borderTopWidth="1px"
+      borderColor="border"
+      bg="bg.subtle"
+    >
       <Container maxW="6xl">
         <Flex
           direction={{ base: 'column', md: 'row' }}
@@ -18,7 +25,7 @@ export function Footer() {
             </Text>
           </HStack>
           <Text fontSize="sm" color="fg.muted">
-            Built with React, Vite &amp; Chakra UI
+            Places · Gallery · Maps · About
           </Text>
         </Flex>
       </Container>
