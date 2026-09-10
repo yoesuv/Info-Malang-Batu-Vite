@@ -3,7 +3,7 @@ import {
   Container,
   Flex,
   Heading,
-  Icon,
+  Image,
   SimpleGrid,
   Text,
   VStack,
@@ -13,7 +13,8 @@ import { useState } from 'react'
 import { galleryItems } from '@/data/gallery'
 
 export default function GalleryPage() {
-  const [selected, setSelected] = useState<string | null>(null)
+  const [selected, setSelected] = useState<number | null>(null)
+  const selectedItem = selected !== null ? galleryItems[selected] : null
 
   return (
     <Box py={{ base: '8', md: '12' }} minH="100dvh">
@@ -28,48 +29,30 @@ export default function GalleryPage() {
         </VStack>
 
         <SimpleGrid columns={{ base: 1, sm: 2, md: 3 }} gap="4">
-          {galleryItems.map((item) => (
+          {galleryItems.map((item, i) => (
             <Box
-              key={item.id}
-              aspectRatio="4/3"
-              bgGradient="to-br"
-              gradientFrom={`${item.colorPalette}.500/20`}
-              gradientTo={`${item.colorPalette}.500/5`}
-              borderRadius="lg"
+              key={item.caption + i}
               overflow="hidden"
+              borderRadius="lg"
               cursor="pointer"
               transition="all 0.2s"
+              css={{ aspectRatio: '4/3' }}
               _hover={{ transform: 'scale(1.02)', shadow: 'lg' }}
-              onClick={() => setSelected(item.id)}
+              onClick={() => setSelected(i)}
             >
-              <Flex
-                direction="column"
-                align="center"
-                justify="center"
+              <Image
+                src={item.thumbnail}
+                alt={item.caption}
+                w="full"
                 h="full"
-                p="4"
-                gap="2"
-              >
-                <Icon
-                  as={item.icon}
-                  boxSize="12"
-                  color={`${item.colorPalette}.500`}
-                />
-                <VStack gap="0" textAlign="center">
-                  <Text fontWeight="semibold" fontSize="sm">
-                    {item.title}
-                  </Text>
-                  <Text fontSize="xs" color="fg.muted">
-                    {item.caption}
-                  </Text>
-                </VStack>
-              </Flex>
+                css={{ objectFit: 'cover' }}
+              />
             </Box>
           ))}
         </SimpleGrid>
 
-        {/* Lightbox — replace with Image component when real photos added */}
-        {selected && (
+        {/* Lightbox */}
+        {selectedItem && (
           <Box
             position="fixed"
             inset="0"
@@ -78,31 +61,22 @@ export default function GalleryPage() {
             onClick={() => setSelected(null)}
           >
             <Flex h="full" align="center" justify="center" p="4">
-              {(() => {
-                const item = galleryItems.find((g) => g.id === selected)
-                if (!item) return null
-                return (
-                  <Box
-                    bg={`${item.colorPalette}.500/10`}
-                    borderRadius="lg"
-                    p="12"
-                    textAlign="center"
-                    onClick={(e) => e.stopPropagation()}
-                  >
-                    <Icon
-                      as={item.icon}
-                      boxSize="24"
-                      color={`${item.colorPalette}.500`}
-                    />
-                    <Heading size="lg" mt="4">
-                      {item.title}
-                    </Heading>
-                    <Text color="fg.muted" mt="1">
-                      {item.caption}
-                    </Text>
-                  </Box>
-                )
-              })()}
+              <Box
+                maxW="3xl"
+                w="full"
+                borderRadius="lg"
+                overflow="hidden"
+                bg="bg"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <Image
+                  src={selectedItem.image || selectedItem.thumbnail}
+                  alt={selectedItem.caption}
+                />
+                <VStack gap="1" p="4" textAlign="center">
+                  <Text fontWeight="semibold">{selectedItem.caption}</Text>
+                </VStack>
+              </Box>
             </Flex>
           </Box>
         )}
