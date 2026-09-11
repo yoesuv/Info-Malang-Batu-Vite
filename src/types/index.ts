@@ -1,6 +1,9 @@
 import type { IconType } from 'react-icons'
 
-import type { Place } from '@/data/places'
+import type { Place } from './domain'
+
+export * from './api'
+export * from './domain'
 
 export interface PlaceImageProps {
   src?: string

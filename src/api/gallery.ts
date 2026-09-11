@@ -1,23 +1,13 @@
 import { useQuery } from '@tanstack/react-query'
 
 import { api } from '@/api/client'
-import type { GalleryItem } from '@/data/gallery'
+import type { GalleryItem, GalleryPayload } from '@/types'
 
 // ---------------------------------------------------------------------------
 // Endpoint
 // ---------------------------------------------------------------------------
 
 const GALLERY_ENDPOINT = '/Gallery_Malang_Batu.json'
-
-// ---------------------------------------------------------------------------
-// DTO (raw API shape)
-// ---------------------------------------------------------------------------
-
-export interface GalleryPayload {
-  caption: string
-  image: string
-  thumbnail: string
-}
 
 // ---------------------------------------------------------------------------
 // Mapping: DTO -> domain model

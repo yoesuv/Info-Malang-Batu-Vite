@@ -18,7 +18,8 @@ import { LuSearch, LuTriangleAlert } from 'react-icons/lu'
 
 import { usePlacesQuery } from '@/api/places'
 import { PlaceCard } from '@/components/PlaceCard'
-import { regions, type PlaceRegion } from '@/data/places'
+import { regions } from '@/data/places'
+import type { PlaceRegion } from '@/types'
 
 const GRID_COLUMNS = { base: 1, md: 2, lg: 3 } as const
 

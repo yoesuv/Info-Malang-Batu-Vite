@@ -1,8 +1,4 @@
-export interface ChangelogEntry {
-  version: string
-  date: string
-  changes: string[]
-}
+import type { ChangelogEntry, Library } from '@/types'
 
 export const changelog: ChangelogEntry[] = [
   {
@@ -28,12 +24,6 @@ export const changelog: ChangelogEntry[] = [
     changes: ['Initial release with hero and destinations sections'],
   },
 ]
-
-export interface Library {
-  name: string
-  url: string
-  description: string
-}
 
 export const libraries: Library[] = [
   {

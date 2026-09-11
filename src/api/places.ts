@@ -1,5 +1,4 @@
 import { useQuery } from '@tanstack/react-query'
-import type { IconType } from 'react-icons'
 import {
   LuCastle,
   LuChurch,
@@ -17,7 +16,7 @@ import {
 } from 'react-icons/lu'
 
 import { api } from '@/api/client'
-import type { Place, PlaceRegion } from '@/data/places'
+import type { Place, PlacePayload, PlaceRegion, PlaceStyle } from '@/types'
 
 // ---------------------------------------------------------------------------
 // Endpoints
@@ -28,18 +27,6 @@ const PLACES_ENDPOINTS: Record<PlaceRegion, string> = {
   'kab-malang': '/List_place_kab_malang.json',
   'kota-malang': '/List_place_kota_malang.json',
   'kota-batu': '/List_place_kota_batu.json',
-}
-
-// ---------------------------------------------------------------------------
-// DTO (raw API shape)
-// ---------------------------------------------------------------------------
-
-export interface PlacePayload {
-  nama: string
-  lokasi: string
-  deskripsi: string
-  thumbnail: string
-  gambar: string
 }
 
 // ---------------------------------------------------------------------------
@@ -61,12 +48,6 @@ function toRegion(lokasi: string): PlaceRegion {
   if (value.includes('kab')) return 'kab-malang'
   if (value.includes('kota malang')) return 'kota-malang'
   return 'all'
-}
-
-interface PlaceStyle {
-  icon: IconType
-  colorPalette: string
-  tag: string
 }
 
 /** First matching rule wins — keep more specific keywords earlier. */

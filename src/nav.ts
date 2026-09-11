@@ -1,11 +1,6 @@
 import { LuImages, LuInfo, LuMapPin, LuNavigation } from 'react-icons/lu'
-import type { IconType } from 'react-icons'
 
-export interface NavItem {
-  label: string
-  href: string
-  icon: IconType
-}
+import type { NavItem } from '@/types'
 
 export const navItems: NavItem[] = [
   { label: 'Places', href: '/places', icon: LuNavigation },
