@@ -11,9 +11,64 @@ import {
   VStack,
 } from '@chakra-ui/react'
 import { useState } from 'react'
-import { LuTriangleAlert } from 'react-icons/lu'
+import { LuImageOff, LuTriangleAlert } from 'react-icons/lu'
 
 import { useGalleryQuery } from '@/api/gallery'
+
+const FADE_TRANSITION = 'opacity 0.3s ease-in-out'
+
+interface GalleryImageProps {
+  src: string
+  alt: string
+  /** Grid images lazy-load + async decode; lightbox loads eagerly. */
+  lazy?: boolean
+  className?: string
+}
+
+/**
+ * Image with a skeleton placeholder underneath.
+ * Fades in once loaded; shows a fallback on error.
+ */
+function GalleryImage({ src, alt, lazy = true }: GalleryImageProps) {
+  const [status, setStatus] = useState<'loading' | 'loaded' | 'error'>(
+    'loading',
+  )
+
+  if (status === 'error') {
+    return (
+      <VStack
+        w="full"
+        h="full"
+        justify="center"
+        gap="2"
+        color="fg.muted"
+        bg="bg.muted"
+      >
+        <LuImageOff size={24} />
+        <Text fontSize="sm">Image unavailable</Text>
+      </VStack>
+    )
+  }
+
+  return (
+    <Box position="relative" w="full" h="full">
+      <Skeleton position="absolute" inset="0" loading={status === 'loading'} />
+      <Image
+        src={src}
+        alt={alt}
+        w="full"
+        h="full"
+        css={{ objectFit: 'cover' }}
+        opacity={status === 'loaded' ? 1 : 0}
+        transition={FADE_TRANSITION}
+        loading={lazy ? 'lazy' : 'eager'}
+        decoding={lazy ? 'async' : 'auto'}
+        onLoad={() => setStatus('loaded')}
+        onError={() => setStatus('error')}
+      />
+    </Box>
+  )
+}
 
 export default function GalleryPage() {
   const { data, isPending, isError, error } = useGalleryQuery()
@@ -71,13 +126,7 @@ export default function GalleryPage() {
                 _hover={{ transform: 'scale(1.02)', shadow: 'lg' }}
                 onClick={() => setSelectedId(item.id)}
               >
-                <Image
-                  src={item.image || item.thumbnail}
-                  alt={item.caption}
-                  w="full"
-                  h="full"
-                  css={{ objectFit: 'cover' }}
-                />
+                <GalleryImage src={item.image} alt={item.caption} />
               </Box>
             ))}
           </SimpleGrid>
@@ -101,9 +150,11 @@ export default function GalleryPage() {
                 bg="bg"
                 onClick={(e) => e.stopPropagation()}
               >
-                <Image
-                  src={selectedItem.image || selectedItem.thumbnail}
+                <GalleryImage
+                  key={selectedItem.id}
+                  src={selectedItem.image}
                   alt={selectedItem.caption}
+                  lazy={false}
                 />
                 <VStack gap="1" p="4" textAlign="center">
                   <Text fontWeight="semibold">{selectedItem.caption}</Text>
