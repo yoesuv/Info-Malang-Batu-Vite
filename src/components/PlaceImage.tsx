@@ -1,18 +1,8 @@
 import { Box, Flex, Icon, Image, Skeleton } from '@chakra-ui/react'
 import { useState } from 'react'
-import type { IconType } from 'react-icons'
 import { LuMapPin } from 'react-icons/lu'
 
-interface PlaceImageProps {
-  src?: string
-  alt: string
-  /** CSS aspect-ratio value, e.g. '4/3' (default) or '16/9' */
-  ratio?: string
-  /** Icon used in the placeholder fallback when src is empty or fails */
-  icon?: IconType
-  /** Color palette used for the placeholder fallback */
-  colorPalette?: string
-}
+import type { PlaceImageProps } from '@/types'
 
 export function PlaceImage({
   src,

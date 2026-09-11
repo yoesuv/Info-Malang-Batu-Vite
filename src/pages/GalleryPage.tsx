@@ -14,16 +14,9 @@ import { useState } from 'react'
 import { LuImageOff, LuTriangleAlert } from 'react-icons/lu'
 
 import { useGalleryQuery } from '@/api/gallery'
+import type { GalleryImageProps } from '@/types'
 
 const FADE_TRANSITION = 'opacity 0.3s ease-in-out'
-
-interface GalleryImageProps {
-  src: string
-  alt: string
-  /** Grid images lazy-load + async decode; lightbox loads eagerly. */
-  lazy?: boolean
-  className?: string
-}
 
 /**
  * Image with a skeleton placeholder underneath.

@@ -2,13 +2,7 @@ import { Badge, Box, Card, HStack, Text } from '@chakra-ui/react'
 import { Link } from 'react-router'
 
 import { PlaceImage } from '@/components/PlaceImage'
-import type { Place } from '@/data/places'
-
-interface PlaceCardProps {
-  place: Place
-  /** Limit description to 2 lines (list views). */
-  lineClamp?: boolean
-}
+import type { PlaceCardProps } from '@/types'
 
 export function PlaceCard({ place, lineClamp = true }: PlaceCardProps) {
   return (
