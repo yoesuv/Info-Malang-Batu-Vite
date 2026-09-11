@@ -1,20 +1,31 @@
 import {
+  Alert,
   Box,
   Container,
   Flex,
   Heading,
   Image,
   SimpleGrid,
+  Skeleton,
   Text,
   VStack,
 } from '@chakra-ui/react'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
+import { LuTriangleAlert } from 'react-icons/lu'
 
-import { galleryItems } from '@/data/gallery'
+import { usePlacesQuery } from '@/api/places'
+import { toGalleryItems } from '@/data/gallery'
 
 export default function GalleryPage() {
-  const [selected, setSelected] = useState<number | null>(null)
-  const selectedItem = selected !== null ? galleryItems[selected] : null
+  const { data: places, isPending, isError, error } = usePlacesQuery('all')
+
+  const galleryItems = useMemo(
+    () => toGalleryItems(places ?? []),
+    [places],
+  )
+
+  const [selectedId, setSelectedId] = useState<string | null>(null)
+  const selectedItem = galleryItems.find((item) => item.id === selectedId)
 
   return (
     <Box py={{ base: '8', md: '12' }} minH="100dvh">
@@ -28,28 +39,54 @@ export default function GalleryPage() {
           </Text>
         </VStack>
 
-        <SimpleGrid columns={{ base: 1, sm: 2, md: 3 }} gap="4">
-          {galleryItems.map((item, i) => (
-            <Box
-              key={item.caption + i}
-              overflow="hidden"
-              borderRadius="lg"
-              cursor="pointer"
-              transition="all 0.2s"
-              css={{ aspectRatio: '4/3' }}
-              _hover={{ transform: 'scale(1.02)', shadow: 'lg' }}
-              onClick={() => setSelected(i)}
-            >
-              <Image
-                src={item.thumbnail}
-                alt={item.caption}
-                w="full"
-                h="full"
-                css={{ objectFit: 'cover' }}
+        {isPending ? (
+          <SimpleGrid columns={{ base: 1, sm: 2, md: 3 }} gap="4">
+            {Array.from({ length: 9 }, (_, i) => (
+              <Skeleton
+                key={i}
+                borderRadius="lg"
+                css={{ aspectRatio: '4/3' }}
               />
-            </Box>
-          ))}
-        </SimpleGrid>
+            ))}
+          </SimpleGrid>
+        ) : isError ? (
+          <Alert.Root status="error" textAlign="center" py="12">
+            <Alert.Indicator>
+              <LuTriangleAlert />
+            </Alert.Indicator>
+            <Alert.Content>
+              <Alert.Title>Failed to load gallery</Alert.Title>
+              <Alert.Description>
+                {error instanceof Error
+                  ? error.message
+                  : 'Something went wrong while fetching the gallery.'}
+              </Alert.Description>
+            </Alert.Content>
+          </Alert.Root>
+        ) : (
+          <SimpleGrid columns={{ base: 1, sm: 2, md: 3 }} gap="4">
+            {galleryItems.map((item) => (
+              <Box
+                key={item.id}
+                overflow="hidden"
+                borderRadius="lg"
+                cursor="pointer"
+                transition="all 0.2s"
+                css={{ aspectRatio: '4/3' }}
+                _hover={{ transform: 'scale(1.02)', shadow: 'lg' }}
+                onClick={() => setSelectedId(item.id)}
+              >
+                <Image
+                  src={item.thumbnail}
+                  alt={item.caption}
+                  w="full"
+                  h="full"
+                  css={{ objectFit: 'cover' }}
+                />
+              </Box>
+            ))}
+          </SimpleGrid>
+        )}
 
         {/* Lightbox */}
         {selectedItem && (
@@ -58,7 +95,7 @@ export default function GalleryPage() {
             inset="0"
             zIndex="overlay"
             bg="blackAlpha.700"
-            onClick={() => setSelected(null)}
+            onClick={() => setSelectedId(null)}
           >
             <Flex h="full" align="center" justify="center" p="4">
               <Box

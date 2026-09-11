@@ -1,20 +1,43 @@
 import {
-  Badge,
   Box,
-  Card,
+  Button,
   Container,
   Heading,
-  HStack,
   SimpleGrid,
+  Skeleton,
   Text,
   VStack,
 } from '@chakra-ui/react'
 import { Link } from 'react-router'
+import { LuArrowRight } from 'react-icons/lu'
 
-import { PlaceImage } from '@/components/PlaceImage'
-import { places } from '@/data/places'
+import { usePlacesQuery } from '@/api/places'
+import { PlaceCard } from '@/components/PlaceCard'
+
+const PREVIEW_COUNT = 6
+
+function PlaceCardSkeleton() {
+  return (
+    <Box
+      borderWidth="1px"
+      borderColor="border"
+      borderRadius="md"
+      overflow="hidden"
+    >
+      <Skeleton h="200px" />
+      <Box p="4" display="grid" gap="3">
+        <Skeleton h="5" w="60%" />
+        <Skeleton h="4" w="35%" />
+        <Skeleton h="4" w="90%" />
+      </Box>
+    </Box>
+  )
+}
 
 export function Destinations() {
+  const { data: places, isPending } = usePlacesQuery('all')
+  const preview = (places ?? []).slice(0, PREVIEW_COUNT)
+
   return (
     <Box as="section" py={{ base: '12', md: '20' }}>
       <Container maxW="6xl">
@@ -32,52 +55,22 @@ export function Destinations() {
         </VStack>
 
         <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} gap="6">
-          {places.map((destination) => (
-            <Link
-              key={destination.id}
-              to={`/places/${destination.id}`}
-              style={{ textDecoration: 'none' }}
-            >
-              <Card.Root
-                variant="outline"
-                overflow="hidden"
-                h="full"
-                transition="all 0.2s"
-                _hover={{
-                  transform: 'translateY(-4px)',
-                  shadow: 'lg',
-                }}
-              >
-                <PlaceImage
-                  src={destination.thumbnail || undefined}
-                  alt={destination.nama}
-                  icon={destination.icon}
-                  colorPalette={destination.colorPalette}
-                />
-                <Card.Body gap="4">
-                  <HStack justify="space-between" align="start">
-                    <Box>
-                      <Card.Title mb="1">{destination.nama}</Card.Title>
-                      <Text fontSize="sm" color="fg.subtle" mb="2">
-                        {destination.lokasi}
-                      </Text>
-                    </Box>
-                    {destination.tag && (
-                      <Badge
-                        colorPalette={destination.colorPalette ?? 'gray'}
-                        variant="subtle"
-                        flexShrink="0"
-                      >
-                        {destination.tag}
-                      </Badge>
-                    )}
-                  </HStack>
-                  <Card.Description>{destination.deskripsi}</Card.Description>
-                </Card.Body>
-              </Card.Root>
-            </Link>
-          ))}
+          {isPending
+            ? Array.from({ length: PREVIEW_COUNT }, (_, i) => (
+                <PlaceCardSkeleton key={i} />
+              ))
+            : preview.map((place) => (
+                <PlaceCard key={place.id} place={place} lineClamp={false} />
+              ))}
         </SimpleGrid>
+
+        <VStack mt="10">
+          <Button asChild colorPalette="teal" variant="subtle">
+            <Link to="/places">
+              View all places <LuArrowRight />
+            </Link>
+          </Button>
+        </VStack>
       </Container>
     </Box>
   )

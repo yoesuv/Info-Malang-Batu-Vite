@@ -1,38 +1,63 @@
 import {
+  Alert,
   Badge,
   Box,
-  Card,
+  Button,
   Container,
-  HStack,
   Heading,
+  HStack,
   Icon,
   Input,
   SimpleGrid,
+  Skeleton,
   Text,
   VStack,
 } from '@chakra-ui/react'
 import { useMemo, useState } from 'react'
-import { Link } from 'react-router'
-import { LuSearch } from 'react-icons/lu'
+import { LuSearch, LuTriangleAlert } from 'react-icons/lu'
 
-import { PlaceImage } from '@/components/PlaceImage'
-import { places, regions } from '@/data/places'
+import { usePlacesQuery } from '@/api/places'
+import { PlaceCard } from '@/components/PlaceCard'
+import { regions, type PlaceRegion } from '@/data/places'
+
+const GRID_COLUMNS = { base: 1, md: 2, lg: 3 } as const
+
+function PlaceCardSkeleton() {
+  return (
+    <Box
+      borderWidth="1px"
+      borderColor="border"
+      borderRadius="md"
+      overflow="hidden"
+    >
+      <Skeleton h="200px" />
+      <Box p="4" display="grid" gap="3">
+        <Skeleton h="5" w="60%" />
+        <Skeleton h="4" w="35%" />
+        <Skeleton h="4" w="90%" />
+        <Skeleton h="4" w="70%" />
+      </Box>
+    </Box>
+  )
+}
 
 export default function PlacesPage() {
   const [search, setSearch] = useState('')
-  const [activeRegion, setActiveRegion] = useState<string>('All')
+  const [activeRegion, setActiveRegion] = useState<PlaceRegion>('all')
+
+  const { data: places, isPending, isError, error, refetch } =
+    usePlacesQuery(activeRegion)
 
   const filtered = useMemo(() => {
-    return places.filter((place) => {
-      const matchesSearch =
-        search === '' ||
-        place.nama.toLowerCase().includes(search.toLowerCase()) ||
-        place.deskripsi.toLowerCase().includes(search.toLowerCase())
-      const matchesRegion =
-        activeRegion === 'All' || place.lokasi.includes(activeRegion)
-      return matchesSearch && matchesRegion
-    })
-  }, [search, activeRegion])
+    if (!places) return []
+    const keyword = search.trim().toLowerCase()
+    if (keyword === '') return places
+    return places.filter(
+      (place) =>
+        place.nama.toLowerCase().includes(keyword) ||
+        place.deskripsi.toLowerCase().includes(keyword),
+    )
+  }, [places, search])
 
   return (
     <Box py={{ base: '8', md: '12' }}>
@@ -68,81 +93,64 @@ export default function PlacesPage() {
           </Box>
         </Box>
 
-        {/* Region filter */}
+        {/* Region filter — each option hits its own API endpoint */}
         <HStack gap="2" flexWrap="wrap" justify="center" mb="8">
           <Text fontSize="sm" color="fg.muted" fontWeight="medium">
             Region:
           </Text>
-          {regions.map((region) => (
+          {regions.map(({ value, label }) => (
             <Badge
-              key={region}
-              variant={activeRegion === region ? 'solid' : 'subtle'}
-              colorPalette={activeRegion === region ? 'teal' : 'gray'}
+              key={value}
+              variant={activeRegion === value ? 'solid' : 'subtle'}
+              colorPalette={activeRegion === value ? 'teal' : 'gray'}
               cursor="pointer"
               px="3"
               py="1"
               borderRadius="full"
-              onClick={() => setActiveRegion(region)}
+              onClick={() => setActiveRegion(value)}
             >
-              {region}
+              {label}
             </Badge>
           ))}
         </HStack>
 
         {/* Results */}
-        {filtered.length === 0 ? (
+        {isPending ? (
+          <SimpleGrid columns={GRID_COLUMNS} gap="6">
+            {Array.from({ length: 6 }, (_, i) => (
+              <PlaceCardSkeleton key={i} />
+            ))}
+          </SimpleGrid>
+        ) : isError ? (
+          <Alert.Root status="error" textAlign="center" py="12">
+            <Alert.Indicator>
+              <LuTriangleAlert />
+            </Alert.Indicator>
+            <Alert.Content>
+              <Alert.Title>Failed to load places</Alert.Title>
+              <Alert.Description>
+                {error instanceof Error
+                  ? error.message
+                  : 'Something went wrong while fetching the list.'}
+              </Alert.Description>
+              <Button
+                size="sm"
+                colorPalette="teal"
+                mt="2"
+                onClick={() => refetch()}
+              >
+                Try again
+              </Button>
+            </Alert.Content>
+          </Alert.Root>
+        ) : filtered.length === 0 ? (
           <Text textAlign="center" color="fg.muted" py="12">
-            No places found matching your filters.
+            No places found matching your search.
           </Text>
         ) : (
-          <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} gap="6">
+          <SimpleGrid columns={GRID_COLUMNS} gap="6">
             {filtered.map((place) => (
-              <Link
-                key={place.id}
-                to={`/places/${place.id}`}
-                style={{ textDecoration: 'none' }}
-              >
-                <Card.Root
-                  variant="outline"
-                  overflow="hidden"
-                  h="full"
-                  transition="all 0.2s"
-                  _hover={{
-                    transform: 'translateY(-4px)',
-                    shadow: 'lg',
-                    borderColor: 'teal.300',
-                  }}
-                >
-                  <PlaceImage
-                    src={place.thumbnail || undefined}
-                    alt={place.nama}
-                    icon={place.icon}
-                    colorPalette={place.colorPalette}
-                  />
-                  <Card.Body gap="3">
-                    <HStack justify="space-between" align="start">
-                      <Box>
-                        <Card.Title mb="1">{place.nama}</Card.Title>
-                        <Text fontSize="sm" color="fg.subtle" mb="2">
-                          {place.lokasi}
-                        </Text>
-                      </Box>
-                      {place.tag && (
-                        <Badge
-                          colorPalette={place.colorPalette ?? 'gray'}
-                          variant="subtle"
-                          flexShrink="0"
-                        >
-                          {place.tag}
-                        </Badge>
-                      )}
-                    </HStack>
-                    <Card.Description lineClamp={2}>
-                      {place.deskripsi}
-                    </Card.Description>
-                  </Card.Body>
-                </Card.Root>
-              </Link>
+              <PlaceCard key={place.id} place={place} />
             ))}
           </SimpleGrid>
         )}

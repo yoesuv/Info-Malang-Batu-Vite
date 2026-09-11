@@ -1,22 +1,77 @@
 import {
+  Alert,
   Badge,
   Box,
   Button,
   Container,
   Heading,
   HStack,
+  Skeleton,
   Text,
   VStack,
 } from '@chakra-ui/react'
 import { Link, useParams } from 'react-router'
-import { LuArrowLeft } from 'react-icons/lu'
+import { LuArrowLeft, LuTriangleAlert } from 'react-icons/lu'
 
+import { usePlaceQuery } from '@/api/places'
 import { PlaceImage } from '@/components/PlaceImage'
-import { places } from '@/data/places'
+
+function DetailSkeleton() {
+  return (
+    <VStack gap="6" align="stretch">
+      <Skeleton h="8" w="fit-content" />
+      <Skeleton h="12" w="50%" />
+      <Skeleton h="8" w="25%" />
+      <Skeleton h="320px" borderRadius="lg" />
+      <Skeleton h="12" w="80%" />
+      <Skeleton h="12" w="60%" />
+    </VStack>
+  )
+}
 
 export default function PlaceDetailPage() {
   const { id } = useParams<{ id: string }>()
-  const place = places.find((p) => p.id === id)
+  const { place, isPending, isError, error, refetch } = usePlaceQuery(id)
+
+  if (isPending) {
+    return (
+      <Box py={{ base: '8', md: '12' }}>
+        <Container maxW="6xl">
+          <DetailSkeleton />
+        </Container>
+      </Box>
+    )
+  }
+
+  if (isError) {
+    return (
+      <Box py={{ base: '12', md: '20' }}>
+        <Container maxW="6xl">
+          <Alert.Root status="error" textAlign="center">
+            <Alert.Indicator>
+              <LuTriangleAlert />
+            </Alert.Indicator>
+            <Alert.Content>
+              <Alert.Title>Failed to load place</Alert.Title>
+              <Alert.Description>
+                {error instanceof Error
+                  ? error.message
+                  : 'Something went wrong while fetching this place.'}
+              </Alert.Description>
+              <Button
+                size="sm"
+                colorPalette="teal"
+                mt="3"
+                onClick={() => refetch()}
+              >
+                Try again
+              </Button>
+            </Alert.Content>
+          </Alert.Root>
+        </Container>
+      </Box>
+    )
+  }
 
   if (!place) {
     return (
