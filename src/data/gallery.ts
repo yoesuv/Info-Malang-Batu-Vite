@@ -1,23 +1,9 @@
-import type { Place } from './places'
-
 export interface GalleryItem {
+  /** Stable id derived from `caption` (slug). */
   id: string
   caption: string
-  thumbnail: string
+  /** Full-size image — used for both grid and lightbox. May be empty. */
   image: string
-}
-
-/**
- * Derive gallery items from places that actually have an image.
- * (The API returns many places with empty `thumbnail`/`gambar`.)
- */
-export function toGalleryItems(places: Place[]): GalleryItem[] {
-  return places
-    .filter((place) => place.thumbnail || place.gambar)
-    .map((place) => ({
-      id: place.id,
-      caption: place.nama,
-      thumbnail: place.thumbnail || place.gambar,
-      image: place.gambar || place.thumbnail,
-    }))
+  /** Fallback when `image` is empty. May be empty. */
+  thumbnail: string
 }

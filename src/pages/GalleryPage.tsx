@@ -10,19 +10,14 @@ import {
   Text,
   VStack,
 } from '@chakra-ui/react'
-import { useMemo, useState } from 'react'
+import { useState } from 'react'
 import { LuTriangleAlert } from 'react-icons/lu'
 
-import { usePlacesQuery } from '@/api/places'
-import { toGalleryItems } from '@/data/gallery'
+import { useGalleryQuery } from '@/api/gallery'
 
 export default function GalleryPage() {
-  const { data: places, isPending, isError, error } = usePlacesQuery('all')
-
-  const galleryItems = useMemo(
-    () => toGalleryItems(places ?? []),
-    [places],
-  )
+  const { data, isPending, isError, error } = useGalleryQuery()
+  const galleryItems = data ?? []
 
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const selectedItem = galleryItems.find((item) => item.id === selectedId)
@@ -77,7 +72,7 @@ export default function GalleryPage() {
                 onClick={() => setSelectedId(item.id)}
               >
                 <Image
-                  src={item.thumbnail}
+                  src={item.image || item.thumbnail}
                   alt={item.caption}
                   w="full"
                   h="full"
