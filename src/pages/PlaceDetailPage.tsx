@@ -121,7 +121,8 @@ export default function PlaceDetailPage() {
             borderColor="border"
           >
             <PlaceImage
-              src={place.gambar || place.thumbnail || undefined}
+              src={place.gambar || undefined}
+              thumbnailSrc={place.thumbnail || undefined}
               alt={place.nama}
               ratio="16/9"
               icon={place.icon}

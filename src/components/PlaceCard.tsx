@@ -22,7 +22,8 @@ export function PlaceCard({ place, lineClamp = true }: PlaceCardProps) {
         }}
       >
         <PlaceImage
-          src={place.gambar || place.thumbnail || undefined}
+          src={place.gambar || undefined}
+          thumbnailSrc={place.thumbnail || undefined}
           alt={place.nama}
           icon={place.icon}
           colorPalette={place.colorPalette}

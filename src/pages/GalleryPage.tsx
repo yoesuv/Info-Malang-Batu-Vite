@@ -4,7 +4,6 @@ import {
   Container,
   Flex,
   Heading,
-  Image,
   SimpleGrid,
   Skeleton,
   Text,
@@ -14,52 +13,39 @@ import { useState } from 'react'
 import { LuImageOff, LuTriangleAlert } from 'react-icons/lu'
 
 import { useGalleryQuery } from '@/api/gallery'
+import { ProgressiveImage } from '@/components/ProgressiveImage'
 import type { GalleryImageProps } from '@/types'
 
-const FADE_TRANSITION = 'opacity 0.3s ease-in-out'
-
 /**
- * Image with a skeleton placeholder underneath.
- * Fades in once loaded; shows a fallback on error.
+ * Progressive image (skeleton → thumbnail → full) with a
+ * fallback shown only when every source fails to load.
  */
-function GalleryImage({ src, alt, lazy = true }: GalleryImageProps) {
-  const [status, setStatus] = useState<'loading' | 'loaded' | 'error'>(
-    'loading',
-  )
-
-  if (status === 'error') {
-    return (
-      <VStack
-        w="full"
-        h="full"
-        justify="center"
-        gap="2"
-        color="fg.muted"
-        bg="bg.muted"
-      >
-        <LuImageOff size={24} />
-        <Text fontSize="sm">Image unavailable</Text>
-      </VStack>
-    )
-  }
-
+function GalleryImage({
+  src,
+  thumbnailSrc,
+  alt,
+  lazy = true,
+}: GalleryImageProps) {
   return (
-    <Box position="relative" w="full" h="full">
-      <Skeleton position="absolute" inset="0" loading={status === 'loading'} />
-      <Image
-        src={src}
-        alt={alt}
-        w="full"
-        h="full"
-        css={{ objectFit: 'cover' }}
-        opacity={status === 'loaded' ? 1 : 0}
-        transition={FADE_TRANSITION}
-        loading={lazy ? 'lazy' : 'eager'}
-        decoding={lazy ? 'async' : 'auto'}
-        onLoad={() => setStatus('loaded')}
-        onError={() => setStatus('error')}
-      />
-    </Box>
+    <ProgressiveImage
+      src={src}
+      thumbnailSrc={thumbnailSrc}
+      alt={alt}
+      lazy={lazy}
+      fallback={
+        <VStack
+          w="full"
+          h="full"
+          justify="center"
+          gap="2"
+          color="fg.muted"
+          bg="bg.muted"
+        >
+          <LuImageOff size={24} />
+          <Text fontSize="sm">Image unavailable</Text>
+        </VStack>
+      }
+    />
   )
 }
 
@@ -119,7 +105,11 @@ export default function GalleryPage() {
                 _hover={{ transform: 'scale(1.02)', shadow: 'lg' }}
                 onClick={() => setSelectedId(item.id)}
               >
-                <GalleryImage src={item.image} alt={item.caption} />
+                <GalleryImage
+                  src={item.image}
+                  thumbnailSrc={item.thumbnail}
+                  alt={item.caption}
+                />
               </Box>
             ))}
           </SimpleGrid>
@@ -146,6 +136,7 @@ export default function GalleryPage() {
                 <GalleryImage
                   key={selectedItem.id}
                   src={selectedItem.image}
+                  thumbnailSrc={selectedItem.thumbnail}
                   alt={selectedItem.caption}
                   lazy={false}
                 />
