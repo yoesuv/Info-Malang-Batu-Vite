@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import {
   Box,
   Button,
@@ -15,6 +16,16 @@ import { usePlacesQuery } from '@/api/places'
 import { PlaceCard } from '@/components/PlaceCard'
 
 const PREVIEW_COUNT = 6
+
+/** Fisher–Yates shuffle, then take the first `count` items. */
+function sampleRandom<T>(items: T[], count: number): T[] {
+  const copy = [...items]
+  for (let i = copy.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1))
+    ;[copy[i], copy[j]] = [copy[j], copy[i]]
+  }
+  return copy.slice(0, count)
+}
 
 function PlaceCardSkeleton() {
   return (
@@ -36,7 +47,11 @@ function PlaceCardSkeleton() {
 
 export function Destinations() {
   const { data: places, isPending } = usePlacesQuery('all')
-  const preview = (places ?? []).slice(0, PREVIEW_COUNT)
+  // Shuffle only when data arrives, not on every re-render.
+  const preview = useMemo(
+    () => sampleRandom(places ?? [], PREVIEW_COUNT),
+    [places],
+  )
 
   return (
     <Box as="section" py={{ base: '12', md: '20' }}>
