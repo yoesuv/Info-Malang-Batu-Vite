@@ -25,8 +25,6 @@ export function PlaceCard({ place, lineClamp = true }: PlaceCardProps) {
           src={place.gambar || undefined}
           thumbnailSrc={place.thumbnail || undefined}
           alt={place.nama}
-          icon={place.icon}
-          colorPalette={place.colorPalette}
         />
         <Card.Body gap="3">
           <HStack justify="space-between" align="start">

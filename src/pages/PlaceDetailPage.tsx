@@ -125,8 +125,6 @@ export default function PlaceDetailPage() {
               thumbnailSrc={place.thumbnail || undefined}
               alt={place.nama}
               ratio="16/9"
-              icon={place.icon}
-              colorPalette={place.colorPalette}
             />
           </Box>
 

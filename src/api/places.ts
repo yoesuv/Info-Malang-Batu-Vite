@@ -1,30 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
-import type { IconType } from 'react-icons'
-import {
-  LuBuilding2,
-  LuCastle,
-  LuChurch,
-  LuDroplets,
-  LuFerrisWheel,
-  LuFlower2,
-  LuHouse,
-  LuLandmark,
-  LuLeaf,
-  LuMountain,
-  LuPalette,
-  LuShoppingBag,
-  LuShoppingBasket,
-  LuSun,
-  LuTag,
-  LuWaves,
-  LuWheat,
-  LuWind,
-} from 'react-icons/lu'
 
 import { api } from '@/api/client'
 import type { Place, PlacePayload, PlaceRegion } from '@/types'
-
-type CategoryStyle = { icon: IconType; colorPalette: string }
 
 // ---------------------------------------------------------------------------
 // Endpoints
@@ -67,47 +44,45 @@ function normalizeCategory(category: string): string {
     .join(' ')
 }
 
-/** Icon + palette keyed by the raw (lowercase) API category. */
-const CATEGORY_STYLES: Record<string, CategoryStyle> = {
-  beach: { icon: LuSun, colorPalette: 'sky' },
-  waterfall: { icon: LuWaves, colorPalette: 'cyan' },
-  mountain: { icon: LuMountain, colorPalette: 'orange' },
-  nature: { icon: LuLeaf, colorPalette: 'green' },
-  museum: { icon: LuLandmark, colorPalette: 'purple' },
-  'theme park': { icon: LuFerrisWheel, colorPalette: 'pink' },
-  'recreation park': { icon: LuFerrisWheel, colorPalette: 'pink' },
-  'water park': { icon: LuDroplets, colorPalette: 'cyan' },
-  garden: { icon: LuFlower2, colorPalette: 'green' },
-  plantation: { icon: LuWheat, colorPalette: 'lime' },
-  mall: { icon: LuShoppingBag, colorPalette: 'violet' },
-  market: { icon: LuShoppingBasket, colorPalette: 'violet' },
-  'city square': { icon: LuCastle, colorPalette: 'teal' },
-  'heritage street': { icon: LuBuilding2, colorPalette: 'yellow' },
-  'cultural village': { icon: LuPalette, colorPalette: 'yellow' },
-  village: { icon: LuHouse, colorPalette: 'lime' },
-  reservoir: { icon: LuDroplets, colorPalette: 'cyan' },
-  'hot spring': { icon: LuDroplets, colorPalette: 'orange' },
-  religious: { icon: LuChurch, colorPalette: 'indigo' },
-  'outdoor adventure': { icon: LuWind, colorPalette: 'blue' },
+/** Badge palette keyed by the raw (lowercase) API category. */
+const CATEGORY_COLOR_PALETTES: Record<string, string> = {
+  beach: 'sky',
+  waterfall: 'cyan',
+  mountain: 'orange',
+  nature: 'green',
+  museum: 'purple',
+  'theme park': 'pink',
+  'recreation park': 'pink',
+  'water park': 'cyan',
+  garden: 'green',
+  plantation: 'lime',
+  mall: 'violet',
+  market: 'violet',
+  'city square': 'teal',
+  'heritage street': 'yellow',
+  'cultural village': 'yellow',
+  village: 'lime',
+  reservoir: 'cyan',
+  'hot spring': 'orange',
+  religious: 'indigo',
+  'outdoor adventure': 'blue',
 }
 
-const FALLBACK_CATEGORY_STYLE: CategoryStyle = {
-  icon: LuTag,
-  colorPalette: 'gray',
-}
+const FALLBACK_COLOR_PALETTE = 'gray'
 
-/** Category from the API -> badge label + icon/palette. */
+/** Category from the API -> badge label + color palette. */
 function toStyle(category: string | undefined): {
   tag: string
-  icon: IconType
   colorPalette: string
 } {
   if (!category) {
-    return { ...FALLBACK_CATEGORY_STYLE, tag: 'Place' }
+    return { tag: 'Place', colorPalette: FALLBACK_COLOR_PALETTE }
   }
   const key = category.trim().toLowerCase()
-  const style = CATEGORY_STYLES[key] ?? FALLBACK_CATEGORY_STYLE
-  return { ...style, tag: normalizeCategory(category) }
+  return {
+    tag: normalizeCategory(category),
+    colorPalette: CATEGORY_COLOR_PALETTES[key] ?? FALLBACK_COLOR_PALETTE,
+  }
 }
 
 export function toPlace(payload: PlacePayload, index: number): Place {

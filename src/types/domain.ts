@@ -21,7 +21,6 @@ export interface Place {
   region: PlaceRegion
   /** Normalized category label from the API, e.g. 'Beach', 'Theme Park'. */
   tag?: string
-  icon?: IconType
   colorPalette?: string
   coordinates?: {
     lat: number
