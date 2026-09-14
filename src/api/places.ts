@@ -1,22 +1,30 @@
 import { useQuery } from '@tanstack/react-query'
+import type { IconType } from 'react-icons'
 import {
+  LuBuilding2,
   LuCastle,
   LuChurch,
   LuDroplets,
   LuFerrisWheel,
   LuFlower2,
+  LuHouse,
   LuLandmark,
+  LuLeaf,
   LuMountain,
   LuPalette,
   LuShoppingBag,
+  LuShoppingBasket,
   LuSun,
-  LuTreeDeciduous,
+  LuTag,
   LuWaves,
+  LuWheat,
   LuWind,
 } from 'react-icons/lu'
 
 import { api } from '@/api/client'
-import type { Place, PlacePayload, PlaceRegion, PlaceStyle } from '@/types'
+import type { Place, PlacePayload, PlaceRegion } from '@/types'
+
+type CategoryStyle = { icon: IconType; colorPalette: string }
 
 // ---------------------------------------------------------------------------
 // Endpoints
@@ -50,68 +58,56 @@ function toRegion(lokasi: string): PlaceRegion {
   return 'all'
 }
 
-/** First matching rule wins — keep more specific keywords earlier. */
-const STYLE_RULES: ReadonlyArray<{ keywords: string[]; style: PlaceStyle }> = [
-  {
-    keywords: ['pantai'],
-    style: { icon: LuSun, colorPalette: 'sky', tag: 'Beach' },
-  },
-  {
-    keywords: ['coban', 'air terjun'],
-    style: { icon: LuWaves, colorPalette: 'cyan', tag: 'Waterfall' },
-  },
-  {
-    keywords: ['gunung', 'bromo', 'semeru'],
-    style: { icon: LuMountain, colorPalette: 'orange', tag: 'Nature' },
-  },
-  {
-    keywords: ['museum'],
-    style: { icon: LuLandmark, colorPalette: 'purple', tag: 'Museum' },
-  },
-  {
-    keywords: ['paralayang'],
-    style: { icon: LuWind, colorPalette: 'blue', tag: 'Adventure' },
-  },
-  {
-    keywords: ['park', 'spectacular', 'wonderland'],
-    style: { icon: LuFerrisWheel, colorPalette: 'pink', tag: 'Theme Park' },
-  },
-  {
-    keywords: ['kebun', 'selecta', 'taman'],
-    style: { icon: LuFlower2, colorPalette: 'green', tag: 'Garden' },
-  },
-  {
-    keywords: ['mall', 'plaza', 'square', 'pasar', 'sarina'],
-    style: { icon: LuShoppingBag, colorPalette: 'violet', tag: 'Shopping' },
-  },
-  {
-    keywords: ['alun', 'tugu'],
-    style: { icon: LuCastle, colorPalette: 'teal', tag: 'Landmark' },
-  },
-  {
-    keywords: ['kampung'],
-    style: { icon: LuPalette, colorPalette: 'yellow', tag: 'Culture' },
-  },
-  {
-    keywords: ['desa wisata'],
-    style: { icon: LuTreeDeciduous, colorPalette: 'lime', tag: 'Cultural Village' },
-  },
-  {
-    keywords: ['waduk'],
-    style: { icon: LuDroplets, colorPalette: 'cyan', tag: 'Lake' },
-  },
-  {
-    keywords: ['masjid', 'griya'],
-    style: { icon: LuChurch, colorPalette: 'indigo', tag: 'Religion' },
-  },
-]
+/** 'theme park' -> 'Theme Park', 'beach' -> 'Beach'. */
+function normalizeCategory(category: string): string {
+  return category
+    .trim()
+    .split(/\s+/)
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(' ')
+}
 
-function inferStyle(nama: string): PlaceStyle | undefined {
-  const name = nama.toLowerCase()
-  const rule = STYLE_RULES.find(({ keywords }) =>
-    keywords.some((keyword) => name.includes(keyword)),
-  )
-  return rule?.style
+/** Icon + palette keyed by the raw (lowercase) API category. */
+const CATEGORY_STYLES: Record<string, CategoryStyle> = {
+  beach: { icon: LuSun, colorPalette: 'sky' },
+  waterfall: { icon: LuWaves, colorPalette: 'cyan' },
+  mountain: { icon: LuMountain, colorPalette: 'orange' },
+  nature: { icon: LuLeaf, colorPalette: 'green' },
+  museum: { icon: LuLandmark, colorPalette: 'purple' },
+  'theme park': { icon: LuFerrisWheel, colorPalette: 'pink' },
+  'recreation park': { icon: LuFerrisWheel, colorPalette: 'pink' },
+  'water park': { icon: LuDroplets, colorPalette: 'cyan' },
+  garden: { icon: LuFlower2, colorPalette: 'green' },
+  plantation: { icon: LuWheat, colorPalette: 'lime' },
+  mall: { icon: LuShoppingBag, colorPalette: 'violet' },
+  market: { icon: LuShoppingBasket, colorPalette: 'violet' },
+  'city square': { icon: LuCastle, colorPalette: 'teal' },
+  'heritage street': { icon: LuBuilding2, colorPalette: 'yellow' },
+  'cultural village': { icon: LuPalette, colorPalette: 'yellow' },
+  village: { icon: LuHouse, colorPalette: 'lime' },
+  reservoir: { icon: LuDroplets, colorPalette: 'cyan' },
+  'hot spring': { icon: LuDroplets, colorPalette: 'orange' },
+  religious: { icon: LuChurch, colorPalette: 'indigo' },
+  'outdoor adventure': { icon: LuWind, colorPalette: 'blue' },
+}
+
+const FALLBACK_CATEGORY_STYLE: CategoryStyle = {
+  icon: LuTag,
+  colorPalette: 'gray',
+}
+
+/** Category from the API -> badge label + icon/palette. */
+function toStyle(category: string | undefined): {
+  tag: string
+  icon: IconType
+  colorPalette: string
+} {
+  if (!category) {
+    return { ...FALLBACK_CATEGORY_STYLE, tag: 'Place' }
+  }
+  const key = category.trim().toLowerCase()
+  const style = CATEGORY_STYLES[key] ?? FALLBACK_CATEGORY_STYLE
+  return { ...style, tag: normalizeCategory(category) }
 }
 
 export function toPlace(payload: PlacePayload, index: number): Place {
@@ -123,7 +119,7 @@ export function toPlace(payload: PlacePayload, index: number): Place {
     thumbnail: payload.thumbnail ?? '',
     gambar: payload.gambar ?? '',
     region: toRegion(payload.lokasi),
-    ...inferStyle(payload.nama),
+    ...toStyle(payload.category),
   }
 }
 

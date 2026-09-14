@@ -19,9 +19,10 @@ export interface Place {
   gambar: string
   /** Region derived from `lokasi` — use this for filtering. */
   region: PlaceRegion
+  /** Normalized category label from the API, e.g. 'Beach', 'Theme Park'. */
+  tag?: string
   icon?: IconType
   colorPalette?: string
-  tag?: string
   coordinates?: {
     lat: number
     lng: number

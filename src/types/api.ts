@@ -1,5 +1,3 @@
-import type { IconType } from 'react-icons'
-
 // ---------------------------------------------------------------------------
 // Places DTO (raw API shape)
 // ---------------------------------------------------------------------------
@@ -7,15 +5,11 @@ import type { IconType } from 'react-icons'
 export interface PlacePayload {
   nama: string
   lokasi: string
+  /** Lowercase category from the API, e.g. 'beach', 'theme park'. */
+  category?: string
   deskripsi: string
   thumbnail: string
   gambar: string
-}
-
-export interface PlaceStyle {
-  icon: IconType
-  colorPalette: string
-  tag: string
 }
 
 // ---------------------------------------------------------------------------
