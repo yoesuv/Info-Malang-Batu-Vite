@@ -133,13 +133,18 @@ export default function GalleryPage() {
                 bg="bg"
                 onClick={(e) => e.stopPropagation()}
               >
-                <GalleryImage
-                  key={selectedItem.id}
-                  src={selectedItem.image}
-                  thumbnailSrc={selectedItem.thumbnail}
-                  alt={selectedItem.caption}
-                  lazy={false}
-                />
+                {/* aspect-ratio gives the absolutely-positioned
+                    ProgressiveImage a definite height (like the grid) —
+                    without it the lightbox image collapses to 0. */}
+                <Box w="full" css={{ aspectRatio: '4/3' }} bg="bg.muted">
+                  <GalleryImage
+                    key={selectedItem.id}
+                    src={selectedItem.image}
+                    thumbnailSrc={selectedItem.thumbnail}
+                    alt={selectedItem.caption}
+                    lazy={false}
+                  />
+                </Box>
                 <VStack gap="1" p="4" textAlign="center">
                   <Text fontWeight="semibold">{selectedItem.caption}</Text>
                 </VStack>
