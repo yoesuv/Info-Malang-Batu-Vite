@@ -21,3 +21,15 @@ export interface GalleryPayload {
   image: string
   thumbnail: string
 }
+
+// ---------------------------------------------------------------------------
+// Map markers DTO (raw API shape)
+// ---------------------------------------------------------------------------
+
+export interface MapMarkerPayload {
+  name: string
+  /** Region code from the API (numeric, e.g. 1 = Malang). */
+  lokasi: number
+  latitude: number
+  longitude: number
+}

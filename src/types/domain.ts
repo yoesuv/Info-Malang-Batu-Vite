@@ -29,6 +29,22 @@ export interface Place {
 }
 
 // ---------------------------------------------------------------------------
+// Map markers
+// ---------------------------------------------------------------------------
+
+export interface MapMarker {
+  /** Stable id derived from `name` (slug). */
+  id: string
+  name: string
+  /** Region code from the API (numeric). */
+  lokasi: number
+  position: {
+    lat: number
+    lng: number
+  }
+}
+
+// ---------------------------------------------------------------------------
 // Gallery
 // ---------------------------------------------------------------------------
 
