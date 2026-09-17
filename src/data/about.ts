@@ -172,50 +172,83 @@ export const changelog: ChangelogEntry[] = [
   },
 ]
 
+/**
+ * The stack this app is built on, grouped by role in the UI.
+ *
+ * WRITING RULE: `version` mirrors the resolved version in `package-lock.json`,
+ * not the range in `package.json` — check with `npm ls <name>` before editing.
+ */
 export const libraries: Library[] = [
   {
     name: 'React',
     url: 'https://react.dev',
     description: 'The library for web and native user interfaces',
-  },
-  {
-    name: 'Vite',
-    url: 'https://vite.dev',
-    description: 'Next generation frontend tooling',
-  },
-  {
-    name: 'Chakra UI',
-    url: 'https://www.chakra-ui.com',
-    description: 'Accessible component library for React',
+    version: '19.3.0',
+    category: 'framework',
+    colorPalette: 'cyan',
   },
   {
     name: 'React Router',
     url: 'https://reactrouter.com',
     description: 'Declarative routing for React',
+    version: '7.18.3',
+    category: 'framework',
+    colorPalette: 'red',
+  },
+  {
+    name: 'Chakra UI',
+    url: 'https://www.chakra-ui.com',
+    description: 'Accessible component library for React',
+    version: '3.37.0',
+    category: 'ui',
+    colorPalette: 'teal',
   },
   {
     name: 'React Icons',
     url: 'https://react-icons.github.io/react-icons',
     description: 'Popular icons as React components',
-  },
-  {
-    name: 'TanStack Query',
-    url: 'https://tanstack.com/query',
-    description: 'Remote data caching and request state',
+    version: '5.7.0',
+    category: 'ui',
+    colorPalette: 'pink',
   },
   {
     name: 'next-themes',
     url: 'https://www.npmjs.com/package/next-themes',
     description: 'Color mode / theme management',
+    version: '0.4.6',
+    category: 'ui',
+    colorPalette: 'purple',
+  },
+  {
+    name: 'TanStack Query',
+    url: 'https://tanstack.com/query',
+    description: 'Remote data caching and request state',
+    version: '5.102.8',
+    category: 'data',
+    colorPalette: 'orange',
   },
   {
     name: 'Google Maps',
     url: 'https://github.com/visgl/react-google-maps',
     description: 'Official React components for the Maps JavaScript API',
+    version: '1.10.0',
+    category: 'data',
+    colorPalette: 'green',
+  },
+  {
+    name: 'Vite',
+    url: 'https://vite.dev',
+    description: 'Next generation frontend tooling',
+    version: '8.2.2',
+    category: 'tooling',
+    colorPalette: 'yellow',
   },
   {
     name: 'TypeScript',
     url: 'https://www.typescriptlang.org',
     description: 'Typed superset of JavaScript',
+    version: '6.0.3',
+    category: 'tooling',
+    colorPalette: 'blue',
   },
 ]

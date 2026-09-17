@@ -16,9 +16,7 @@ import {
 import {
   LuCalendar,
   LuCircleCheck,
-  LuExternalLink,
   LuGitBranch,
-  LuPackage,
   LuPencil,
   LuRocket,
   LuSparkles,
@@ -28,7 +26,12 @@ import type { IconType } from 'react-icons'
 
 import { changelog, libraries } from '@/data/about'
 import { APP_VERSION, APP_VERSION_TAG } from '@/version'
-import type { ChangelogChangeType, ChangelogStatus } from '@/types'
+import type {
+  ChangelogChangeType,
+  ChangelogStatus,
+  Library,
+  LibraryCategory,
+} from '@/types'
 
 const CHANGE_STYLES: Record<
   ChangelogChangeType,
@@ -45,6 +48,50 @@ const NODE_STYLES: Record<ChangelogStatus, { bg: string; label?: string }> = {
   current: { bg: 'teal.500', label: 'Latest' },
   released: { bg: 'teal.500' },
   prerelease: { bg: 'border' },
+}
+
+/** Order and copy for the grouped Libraries tab. */
+const LIBRARY_GROUPS: { category: LibraryCategory; label: string }[] = [
+  { category: 'framework', label: 'App & routing' },
+  { category: 'ui', label: 'Interface & theming' },
+  { category: 'data', label: 'Data & maps' },
+  { category: 'tooling', label: 'Tooling & language' },
+]
+
+function LibraryCard({ lib }: { lib: Library }) {
+  return (
+    <Link
+      href={lib.url}
+      target="_blank"
+      rel="noopener noreferrer"
+      display="block"
+      h="full"
+      _hover={{ textDecoration: 'none' }}
+    >
+      <Card.Root
+        variant="outline"
+        h="full"
+        transition="border-color 0.2s"
+        _hover={{ borderColor: `${lib.colorPalette}.solid` }}
+      >
+        <Card.Body gap="2" p="5">
+          <HStack justify="space-between" align="center">
+            <Text fontWeight="semibold">{lib.name}</Text>
+            <Badge
+              colorPalette={lib.colorPalette}
+              variant="subtle"
+              size="sm"
+            >
+              v{lib.version}
+            </Badge>
+          </HStack>
+          <Text fontSize="sm" color="fg.muted">
+            {lib.description}
+          </Text>
+        </Card.Body>
+      </Card.Root>
+    </Link>
+  )
 }
 
 /** Relative "x months ago" hint so the log reads without a calendar in hand. */
@@ -210,39 +257,31 @@ export default function AboutPage() {
 
           {/* Libraries Tab */}
           <Tabs.Content value="libraries">
-            <SimpleGrid columns={{ base: 1, sm: 2 }} gap="4">
-              {libraries.map((lib) => (
-                <Link
-                  key={lib.name}
-                  href={lib.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  _hover={{ textDecoration: 'none' }}
-                >
-                  <Card.Root
-                    variant="outline"
-                    transition="all 0.2s"
-                    _hover={{
-                      shadow: 'md',
-                      borderColor: 'teal.300/30',
-                    }}
-                  >
-                    <Card.Body gap="2">
-                      <HStack justify="space-between">
-                        <HStack gap="2">
-                          <Icon as={LuPackage} boxSize="5" color="teal.500" />
-                          <Text fontWeight="semibold">{lib.name}</Text>
-                        </HStack>
-                        <Icon as={LuExternalLink} boxSize="4" color="fg.muted" />
-                      </HStack>
-                      <Text fontSize="sm" color="fg.muted">
-                        {lib.description}
-                      </Text>
-                    </Card.Body>
-                  </Card.Root>
-                </Link>
-              ))}
-            </SimpleGrid>
+            <VStack gap="8" align="stretch">
+              <Text color="fg.muted" maxW="2xl">
+                The open-source building blocks behind Info Malang Batu.
+              </Text>
+
+              {LIBRARY_GROUPS.map((group) => {
+                const items = libraries.filter(
+                  (lib) => lib.category === group.category,
+                )
+                if (items.length === 0) return null
+
+                return (
+                  <Box key={group.category}>
+                    <Heading size="md" mb="3">
+                      {group.label}
+                    </Heading>
+                    <SimpleGrid columns={{ base: 1, sm: 2, lg: 3 }} gap="4">
+                      {items.map((lib) => (
+                        <LibraryCard key={lib.name} lib={lib} />
+                      ))}
+                    </SimpleGrid>
+                  </Box>
+                )
+              })}
+            </VStack>
           </Tabs.Content>
         </Tabs.Root>
       </Container>

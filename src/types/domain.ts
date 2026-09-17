@@ -88,10 +88,18 @@ export interface ChangelogEntry {
   changes: ChangelogChange[]
 }
 
+/** Buckets used to group the Libraries tab into readable sections. */
+export type LibraryCategory = 'framework' | 'ui' | 'data' | 'tooling'
+
 export interface Library {
   name: string
   url: string
   description: string
+  /** Installed version, kept in sync with `package-lock.json`. */
+  version: string
+  category: LibraryCategory
+  /** Chakra palette token used for the tile accent. */
+  colorPalette: string
 }
 
 // ---------------------------------------------------------------------------
