@@ -5,6 +5,7 @@ import {
   Code,
   Container,
   Heading,
+  Skeleton,
   Text,
   VStack,
 } from "@chakra-ui/react";
@@ -18,8 +19,19 @@ const MAPS_API_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY;
 // Midpoint between Malang city and Batu
 const MALANG_BATU_CENTER = { lat: -7.92, lng: 112.58 };
 
+/** Covers the map while markers (and the Maps SDK) load. */
+function MapSkeleton() {
+  return <Skeleton position="absolute" inset="0" borderRadius="lg" />;
+}
+
 export default function MapsPage() {
-  const { data: markers, isError, error, refetch } = useMapMarkersQuery();
+  const {
+    data: markers,
+    isPending,
+    isError,
+    error,
+    refetch,
+  } = useMapMarkersQuery();
 
   return (
     <Box py={{ base: "8", md: "12" }}>
@@ -72,23 +84,26 @@ export default function MapsPage() {
               </Alert.Content>
             </Alert.Root>
           ) : (
-            <APIProvider apiKey={MAPS_API_KEY}>
-              <Map
-                style={{ width: "100%", height: "100%" }}
-                defaultCenter={MALANG_BATU_CENTER}
-                defaultZoom={9}
-                gestureHandling="cooperative"
-                zoomControl={true}
-              >
-                {markers?.map((marker) => (
-                  <Marker
-                    key={marker.id}
-                    position={marker.position}
-                    title={marker.name}
-                  />
-                ))}
-              </Map>
-            </APIProvider>
+            <Box position="relative" h="full" w="full">
+              <APIProvider apiKey={MAPS_API_KEY}>
+                <Map
+                  style={{ width: "100%", height: "100%" }}
+                  defaultCenter={MALANG_BATU_CENTER}
+                  defaultZoom={9}
+                  gestureHandling="cooperative"
+                  zoomControl={true}
+                >
+                  {markers?.map((marker) => (
+                    <Marker
+                      key={marker.id}
+                      position={marker.position}
+                      title={marker.name}
+                    />
+                  ))}
+                </Map>
+              </APIProvider>
+              {isPending && <MapSkeleton />}
+            </Box>
           )}
         </Box>
       </Container>
