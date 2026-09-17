@@ -117,9 +117,8 @@ export default function AboutPage() {
           <Tabs.Content value="changelog">
             <VStack gap="6" align="stretch">
               <Text color="fg.muted" maxW="2xl">
-                Every release of Info Malang Batu, newest first. Versions follow
-                semantic versioning: major for breaking changes, minor for new
-                capabilities, patch for fixes and polish.
+                What is new in Info Malang Batu, most recent version first. The
+                short version: bigger numbers mean bigger changes.
               </Text>
 
               {changelog.map((entry, entryIndex) => {
@@ -150,7 +149,7 @@ export default function AboutPage() {
                           {status === 'prerelease' && (
                             <Text as="span" color="fg.muted" fontSize="sm">
                               {' '}
-                              (pre-release)
+                              (not released)
                             </Text>
                           )}
                         </Heading>

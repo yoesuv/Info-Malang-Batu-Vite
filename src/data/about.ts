@@ -4,8 +4,14 @@ import type { ChangelogEntry, Library } from '@/types'
  * Newest release first. The first entry is treated as the current version by
  * the Changelog timeline, so it must match `APP_VERSION` (see `src/version.ts`).
  *
+ * WRITING RULE: this is read by travellers, not by us. Describe what someone
+ * can now do, see or feel — never a library, endpoint, bundler, cache header or
+ * a11y attribute. Implementation details belong in `git log`.
+ *   ✗ "Progressive image pipeline: skeleton → thumbnail → crossfade"
+ *   ✓ "Photos appear as a small preview first, then sharpen"
+ *
  * Dates follow the git history; `0.0.1` is flagged `prerelease` because it was
- * only ever a local Vite scaffold, never shipped.
+ * only ever a local scaffold that nobody outside this laptop could open.
  */
 export const changelog: ChangelogEntry[] = [
   {
@@ -13,126 +19,141 @@ export const changelog: ChangelogEntry[] = [
     date: '2026-09-17',
     status: 'current',
     summary:
-      'First public release — the complete Malang & Batu travel companion, now live on Firebase Hosting.',
+      'The first proper release. Everything you need to plan a trip around Malang and Batu, in one place.',
     changes: [
       {
         type: 'added',
         description:
-          'Curated dataset shipped as static JSON: 69 places across Kota Malang (14), Kota Batu (17) and Kabupaten Malang (38), 51 gallery photos and 66 map markers',
+          '69 places to visit, with photos and a description for each: 14 in Kota Malang, 17 in Kota Batu and 38 around Kabupaten Malang',
       },
       {
         type: 'added',
         description:
-          'Same-origin `/api` layer with a 10-minute client cache, so the static dataset costs zero repeat requests',
+          'A map with 66 pins across the highlands — hover over a pin to read which place it marks',
       },
       {
         type: 'added',
         description:
-          'Search across place names and descriptions, combinable with the region filter',
+          '51 photos of the region in the Gallery, viewable full screen',
       },
       {
         type: 'improved',
         description:
-          'Loading skeleton layered over the map while markers and the Google Maps SDK initialise',
+          'The map now shows a placeholder while it opens, so it never looks like the page has frozen',
       },
       {
         type: 'improved',
         description:
-          'Full loading, error, empty and retry states on every data-driven page — no silent failures',
+          'Scrolling the page past the map no longer zooms it by accident',
+      },
+      {
+        type: 'improved',
+        description:
+          'Every page tells you what is happening — a clear loading view while things appear, and a friendly message with a Try again button if they do not',
+      },
+      {
+        type: 'improved',
+        description:
+          'Smoother to use with a screen reader, and with the keyboard alone',
+      },
+      {
+        type: 'improved',
+        description:
+          'Place information loads quickly and stays fresh without re-downloading on every visit',
+      },
+      {
+        type: 'changed',
+        description:
+          'A fresh About page, so you can see which version you are using and what has changed',
       },
       {
         type: 'fixed',
         description:
-          'API base URL now resolves to `/api` in development, preview and production, removing the CORS dependency on the data host',
-      },
-      {
-        type: 'changed',
-        description:
-          'Accessibility pass: semantic landmarks and headings, keyboard-operable gallery lightbox, `aria-hidden` decorative thumbnails',
-      },
-      {
-        type: 'changed',
-        description:
-          'About page rebuilt around the current release, with this changelog and a live library manifest',
+          'Occasional cases where places, photos or pins failed to appear on some networks',
       },
     ],
   },
   {
     version: '0.3.0',
     date: '2026-09-15',
-    summary: 'Interactive Google Maps replaces the embedded static iframe.',
+    summary: 'The map becomes a real map you can move around in.',
     changes: [
       {
         type: 'added',
-        description:
-          'Marker layer rendered from the Maps endpoint with per-place tooltips and cooperative gesture handling',
+        description: 'Buttons to zoom the map in and out',
       },
       {
         type: 'changed',
         description:
-          'Replaced the hard-coded map iframe with `@vis.gl/react-google-maps`, centred on the Malang–Batu midpoint',
-      },
-      {
-        type: 'fixed',
-        description:
-          'Missing API key now shows an actionable setup message instead of a broken map',
+          'Replaced the fixed picture of a map with a live one: pan around Malang and Batu and zoom right in to street level',
       },
     ],
   },
   {
     version: '0.2.0',
-    date: '2026-09-11',
-    summary: 'Remote data, request caching and progressive image loading.',
+    date: '2026-09-14',
+    summary: 'Photos load gently, and new places can arrive without an update.',
     changes: [
       {
         type: 'added',
         description:
-          'Places and gallery photos fetched from remote endpoints with TanStack Query and axios',
+          'Photos appear as a small preview first and then sharpen, instead of popping in one by one',
       },
       {
         type: 'added',
         description:
-          'Progressive image pipeline: skeleton → low-res thumbnail → full image crossfade, with a fallback only when every source fails',
+          'Each place shows a coloured label for its type, so waterfalls, museums and theme parks are easy to tell apart at a glance',
       },
       {
         type: 'added',
         description:
-          'Category-driven badge colours and palettes taken from the API payload',
+          'The home page shows a different handful of suggestions each time you visit',
+      },
+      {
+        type: 'changed',
+        description:
+          'Places and photos are read from a live list, so new spots appear without needing an update',
       },
       {
         type: 'fixed',
         description:
-          'Proxy `/api` requests in `vite preview` so a production build can be checked locally',
+          'Photos that fail to load now show a tidy "Image unavailable" tile instead of a broken image',
       },
       {
         type: 'fixed',
-        description: 'Prevent the lightbox image from collapsing in height',
+        description:
+          'Full screen gallery photos were being squashed flat on some screens',
       },
     ],
   },
   {
     version: '0.1.0',
     date: '2026-09-10',
-    summary: 'Single landing page grows into a routed multi-page app.',
+    summary: 'One long page becomes a proper app you can move through.',
     changes: [
       {
         type: 'added',
         description:
-          'Client-side routing with React Router and a shared layout: Places, Gallery, Maps and About',
-      },
-      {
-        type: 'added',
-        description: 'Sticky bottom navigation on mobile, top navigation on desktop',
+          'Four separate sections — Places, Gallery, Maps and About — each with its own address you can bookmark or send to a friend',
       },
       {
         type: 'added',
         description:
-          'Place detail pages with deep-linkable slug URLs and image-backed destination cards',
+          'A full page for every place, with its photos, story and location',
       },
       {
-        type: 'changed',
+        type: 'added',
         description:
-          'Landing page rebuilt on Chakra UI v3 primitives with dark and light colour modes',
+          'Search places by name or description, and narrow the list down by area',
+      },
+      {
+        type: 'added',
+        description:
+          'A bar along the bottom of the screen on phones, so you can switch sections with your thumb',
+      },
+      {
+        type: 'added',
+        description: 'Light and dark modes, for reading the list at 2am',
       },
     ],
   },
@@ -140,16 +161,12 @@ export const changelog: ChangelogEntry[] = [
     version: '0.0.1',
     date: '2026-09-10',
     status: 'prerelease',
-    summary: 'Local-only scaffold. Never published.',
+    summary: 'A first sketch on a laptop. Never released to anyone.',
     changes: [
       {
         type: 'added',
         description:
-          'Project bootstrapped from the Vite React + TypeScript template with ESLint and strict TS setup',
-      },
-      {
-        type: 'changed',
-        description: 'Static hero and destinations sections hand-coded from mock data',
+          'A welcome banner and a starting list of destinations around Malang and Batu',
       },
     ],
   },
