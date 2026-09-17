@@ -88,6 +88,14 @@ export interface ChangelogEntry {
   changes: ChangelogChange[]
 }
 
+export interface ReleaseEntryProps {
+  entry: ChangelogEntry
+  /** Resolved status (callers default missing `entry.status` to the timeline rule). */
+  status: ChangelogStatus
+  /** Hides the trailing timeline connector on the final entry. */
+  isLast: boolean
+}
+
 /** Buckets used to group the Libraries tab into readable sections. */
 export type LibraryCategory = 'framework' | 'ui' | 'data' | 'tooling'
 
