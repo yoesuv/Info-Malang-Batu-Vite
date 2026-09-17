@@ -62,10 +62,30 @@ export interface GalleryItem {
 // About
 // ---------------------------------------------------------------------------
 
+/** Keep-a-Changelog style categories, rendered as colored badges. */
+export type ChangelogChangeType =
+  | 'added'
+  | 'changed'
+  | 'improved'
+  | 'fixed'
+  | 'removed'
+
+export interface ChangelogChange {
+  type: ChangelogChangeType
+  description: string
+}
+
+export type ChangelogStatus = 'current' | 'released' | 'prerelease'
+
 export interface ChangelogEntry {
   version: string
+  /** ISO date (`YYYY-MM-DD`) of the release. */
   date: string
-  changes: string[]
+  /** One-line summary shown under the version heading. */
+  summary?: string
+  /** Optional; defaults to `released`. Use `prerelease` for unreleased work. */
+  status?: ChangelogStatus
+  changes: ChangelogChange[]
 }
 
 export interface Library {
