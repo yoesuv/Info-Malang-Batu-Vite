@@ -1,75 +1,69 @@
-# React + TypeScript + Vite
+# Info Malang Batu
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Info Malang Batu is a web application that provides information about tourist destinations in Malang and Batu, East Java, Indonesia. It lets visitors browse places of interest, view detailed information and photo galleries, and explore destinations on an interactive map. The app fetches its data from a Firebase-hosted JSON API and is built as a fast, modern single-page application with React, TypeScript, and Vite.
 
-Currently, two official plugins are available:
+## Tech Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- [React](https://react.dev) 19 + [TypeScript](https://www.typescriptlang.org)
+- [Vite](https://vite.dev) — dev server & build tool
+- [Chakra UI](https://chakra-ui.com) — component library & theming
+- [TanStack Query](https://tanstack.com/query) — data fetching & caching
+- [React Router](https://reactrouter.com) — client-side routing
+- [React Google Maps](https://visgl.github.io/react-google-maps/) — interactive maps
+- [Axios](https://axios-http.com) — HTTP client
+- [ESLint](https://eslint.org) — linting
 
-## React Compiler
+## Getting Started
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### Prerequisites
 
-## Expanding the ESLint configuration
+- [Node.js](https://nodejs.org) (LTS recommended)
+- A Google Maps API key (for the Maps page)
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### Installation
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+1. Clone the repository and install dependencies:
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+   ```sh
+   npm install
+   ```
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+2. Create a `.env` file in the project root with your Google Maps API key (see `.env.example`):
+
+   ```sh
+   VITE_GOOGLE_MAPS_API_KEY=your_google_maps_api_key_here
+   ```
+
+   Optionally, set a custom API base URL if you deploy the data to a different host:
+
+   ```sh
+   VITE_API_BASE_URL=https://your-host.example.com
+   ```
+
+3. Start the development server:
+
+   ```sh
+   npm run dev
+   ```
+
+   The app is served at `http://localhost:5173`. Requests to `/api/*` are proxied to the Firebase host, so no CORS setup is needed in development.
+
+### Other Scripts
+
+| Command           | Description                              |
+| ----------------- | ---------------------------------------- |
+| `npm run build`   | Type-check and build for production      |
+| `npm run preview` | Preview the production build locally     |
+| `npm run lint`    | Run ESLint over the codebase             |
+
+## Project Structure
 
 ```
-
-You can also install [eslint-plugin-react-x](https://npmx.dev/package/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://npmx.dev/package/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
+src/
+├── api/         # API client & data fetching (React Query)
+├── assets/      # Static assets
+├── components/  # Shared UI components (Navbar, Footer, PlaceCard, ...)
+├── data/        # Local/static data
+├── pages/       # Route pages (Home, Places, Gallery, Maps, About)
+└── types/       # TypeScript types
 ```
