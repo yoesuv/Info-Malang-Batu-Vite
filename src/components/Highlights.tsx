@@ -12,18 +12,18 @@ export function Highlights() {
     <Box
       as="section"
       id="highlights"
-      py={{ base: '12', md: '16' }}
+      py={{ base: '8', md: '10' }}
       borderYWidth="1px"
       borderColor="border"
       bg="bg.subtle"
     >
       <Container maxW="6xl">
-        <SimpleGrid columns={{ base: 2, md: 4 }} gap="8">
+        <SimpleGrid columns={{ base: 2, md: 4 }} gap="6">
           {stats.map((stat) => (
             <Stat.Root key={stat.label} textAlign="center">
               <Stat.Label color="fg.muted">{stat.label}</Stat.Label>
               <Stat.ValueText
-                fontSize={{ base: '3xl', md: '4xl' }}
+                fontSize={{ base: '2xl', md: '3xl' }}
                 color="teal.500"
               >
                 {stat.value}

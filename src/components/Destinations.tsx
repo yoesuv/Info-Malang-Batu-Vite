@@ -54,12 +54,12 @@ export function Destinations() {
   )
 
   return (
-    <Box as="section" py={{ base: '12', md: '20' }}>
+    <Box as="section" py={{ base: '8', md: '12' }}>
       <Container maxW="6xl">
-        <VStack gap="3" textAlign="center" mb="10">
+        <VStack gap="2" textAlign="center" mb="6">
           <Heading
             as="h2"
-            size={{ base: '2xl', md: '3xl' }}
+            size={{ base: 'xl', md: '2xl' }}
             letterSpacing="tight"
           >
             Popular destinations
@@ -69,17 +69,17 @@ export function Destinations() {
           </Text>
         </VStack>
 
-        <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} gap="6">
+        <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} gap="4">
           {isPending
             ? Array.from({ length: PREVIEW_COUNT }, (_, i) => (
                 <PlaceCardSkeleton key={i} />
               ))
             : preview.map((place) => (
-                <PlaceCard key={place.id} place={place} lineClamp={false} />
+                <PlaceCard key={place.id} place={place} lineClamp />
               ))}
         </SimpleGrid>
 
-        <VStack mt="10">
+        <VStack mt="6">
           <Button asChild colorPalette="teal" variant="subtle">
             <Link to="/places">
               View all places <LuArrowRight />

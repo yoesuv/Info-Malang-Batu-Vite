@@ -18,17 +18,17 @@ export function Hero() {
       bgGradient="to-b"
       gradientFrom="teal.500/10"
       gradientTo="transparent"
-      py={{ base: '16', md: '28' }}
+      py={{ base: '10', md: '16' }}
     >
       <Container maxW="6xl">
-        <VStack gap="6" textAlign="center">
-          <Badge colorPalette="teal" size="lg" variant="subtle" px="3" py="1">
+        <VStack gap="4" textAlign="center">
+          <Badge colorPalette="teal" size="md" variant="subtle" px="3" py="1">
             East Java, Indonesia
           </Badge>
 
           <Heading
             as="h2"
-            size={{ base: '3xl', md: '5xl' }}
+            size={{ base: '2xl', md: '4xl' }}
             letterSpacing="tight"
             lineHeight="shorter"
             maxW="3xl"
@@ -45,19 +45,19 @@ export function Hero() {
             </Text>
           </Heading>
 
-          <Text fontSize={{ base: 'md', md: 'lg' }} color="fg.muted" maxW="2xl">
+          <Text fontSize={{ base: 'sm', md: 'md' }} color="fg.muted" maxW="2xl">
             From volcanic sunrises at Mount Bromo to the theme parks of Batu,
             explore cool mountain air, waterfalls, and vibrant local culture —
             all in one trip.
           </Text>
 
-          <HStack gap="4" pt="2" flexWrap="wrap" justify="center">
-            <Button asChild colorPalette="teal" size="lg">
+          <HStack gap="3" pt="1" flexWrap="wrap" justify="center">
+            <Button asChild colorPalette="teal" size="md">
               <Link to="/places">
                 Explore destinations <LuArrowRight />
               </Link>
             </Button>
-            <Button asChild variant="outline" size="lg">
+            <Button asChild variant="outline" size="md">
               <Link to="/gallery">
                 <LuCompass /> View gallery
               </Link>
