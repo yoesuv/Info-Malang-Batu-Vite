@@ -2,6 +2,12 @@
 
 Info Malang Batu is a web application that provides information about tourist destinations in Malang and Batu, East Java, Indonesia. It lets visitors browse places of interest, view detailed information and photo galleries, and explore destinations on an interactive map. The app fetches its data from a Firebase-hosted JSON API and is built as a fast, modern single-page application with React, TypeScript, and Vite.
 
+## Screenshot
+
+| ![](https://i.imgur.com/0Dhfv5p.png) | ![](https://i.imgur.com/7Bih2sG.png) |
+| :----------------------------------: | :----------------------------------: |
+| ![](https://i.imgur.com/JQmNR2d.png) | ![](https://i.imgur.com/sOshjIO.png) |
+
 ## Tech Stack
 
 - [React](https://react.dev) 19 + [TypeScript](https://www.typescriptlang.org)
@@ -50,11 +56,11 @@ Info Malang Batu is a web application that provides information about tourist de
 
 ### Other Scripts
 
-| Command           | Description                              |
-| ----------------- | ---------------------------------------- |
-| `npm run build`   | Type-check and build for production      |
-| `npm run preview` | Preview the production build locally     |
-| `npm run lint`    | Run ESLint over the codebase             |
+| Command           | Description                          |
+| ----------------- | ------------------------------------ |
+| `npm run build`   | Type-check and build for production  |
+| `npm run preview` | Preview the production build locally |
+| `npm run lint`    | Run ESLint over the codebase         |
 
 ## Project Structure
 
